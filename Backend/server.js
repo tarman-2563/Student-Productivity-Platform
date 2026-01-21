@@ -4,7 +4,7 @@ const connectDB=require("./config/db");
 const userRouter=require("./routes/user.routes");
 
 const app=express();
-const PORT=process.env.PORT || 3838;
+const PORT=process.env.PORT || 5858;
 
 app.use(express.json());
 connectDB();
