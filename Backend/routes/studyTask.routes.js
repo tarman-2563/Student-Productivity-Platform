@@ -1,7 +1,10 @@
 const express=require("express");
 const {createStudyTask,getDailyTasks,updateStudyTask,deleteStudyTask,markTaskAsCompleted}=require("../controllers/studyTask.controller");
+const authMiddleware=require("../middleware/auth.middleware");
 
 const studyTaskRouter=express.Router();
+
+studyTaskRouter.use(authMiddleware);
 
 studyTaskRouter.post("/",createStudyTask);
 studyTaskRouter.get("/",getDailyTasks);
