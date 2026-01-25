@@ -1,4 +1,5 @@
 const express=require("express");
+const cors=require("cors");
 const dotenv=require("dotenv").config();
 const connectDB=require("./config/db");
 const userRouter=require("./routes/user.routes");
@@ -7,6 +8,10 @@ const studyTaskRouter=require("./routes/studyTask.routes");
 const app=express();
 const PORT=process.env.PORT || 5858;
 
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 app.use(express.json());
 connectDB();
 
