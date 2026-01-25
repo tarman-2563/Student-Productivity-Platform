@@ -67,7 +67,7 @@ const updateStudyTask=async(req,res)=>{
     try{
         const taskId=req.params.id;
         const userId=req.user.id;
-        const task=await StudyTask.findOne({taskId,userId});
+        const task=await StudyTask.findOne({_id:taskId,userId});
         if(!task){
             return res.status(404).json({message:"Task not found"});
         }
@@ -88,7 +88,7 @@ const deleteStudyTask=async(req,res)=>{
         const taskId=req.params.id;
         const userId=req.user.id;
         const task=await StudyTask.findOne({
-            taskId,
+            _id:taskId,
             userId
         })
         if(!task){
@@ -111,7 +111,7 @@ const markTaskAsCompleted=async(req,res)=>{
         const taskId=req.params.id;
         const userId=req.user.id;
         const task=await StudyTask.findOne({
-            taskId,
+            _id:taskId,
             userId
         })
         if(!task){

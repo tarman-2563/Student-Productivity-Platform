@@ -8,7 +8,7 @@ studyTaskRouter.use(authMiddleware);
 
 studyTaskRouter.post("/",createStudyTask);
 studyTaskRouter.get("/",getDailyTasks);
-studyTaskRouter.patch("/:d",updateStudyTask);
+studyTaskRouter.patch("/:id",updateStudyTask);
 studyTaskRouter.delete("/:id",deleteStudyTask);
 studyTaskRouter.patch("/:id/complete",markTaskAsCompleted);
 
