@@ -1,0 +1,8 @@
+@import './styles/colors.css';
+@import './styles/components.css';
+@import './styles/planner.css';
+
+#root {
+  width: 100%;
+  margin: 0 auto;
+}

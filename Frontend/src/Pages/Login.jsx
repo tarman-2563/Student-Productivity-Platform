@@ -26,44 +26,54 @@ const Login = ({ onLogin }) => {
             
             if (response.status === 200) {
                 console.log("Response:", response.data);
-                alert("Login successful!");
+                alert("Welcome back, Scholar! 🎉");
                 onLogin();
             }
         } catch (err) {
             console.log("Login error:", err);
-            alert("Login failed. Please check your credentials.");
+            alert("Login failed. Check your credentials and try again!");
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div>
-            <div>
-                <h1>Login</h1>
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <label>Email</label>
+        <div className="auth-container">
+            <div className="auth-card animate-fadeIn">
+                <div className="auth-header">
+                    <h1 className="auth-title">🎮 Welcome Back!</h1>
+                    <p className="auth-subtitle">Ready to continue your study adventure?</p>
+                </div>
+                
+                <form className="auth-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label className="form-label">Email</label>
                         <input
                             type="email"
                             name="email"
+                            className="form-input"
                             value={formData.email}
                             onChange={handleChange}
+                            placeholder="Enter your email"
                             required
                         />
                     </div>
-                    <div>
-                        <label>Password</label>
+                    
+                    <div className="form-group">
+                        <label className="form-label">Password</label>
                         <input
                             type="password"
                             name="password"
+                            className="form-input"
                             value={formData.password}
                             onChange={handleChange}
+                            placeholder="Enter your password"
                             required
                         />
                     </div>
-                    <button type="submit" disabled={isLoading}>
-                        {isLoading ? "Logging in..." : "Login"}
+                    
+                    <button type="submit" className="btn btn-primary" disabled={isLoading}>
+                        {isLoading ? "Logging in..." : "🚀 Start Adventure"}
                     </button>
                 </form>
             </div>
