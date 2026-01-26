@@ -18,7 +18,7 @@ const useDailyTasks = (date) => {
                 setTasks(data.tasks || []);
             } catch (err) {
                 console.error("Failed to fetch daily tasks", err);
-                setError(err.message);
+                setError(err.response?.data?.message || err.message || "Failed to load tasks");
                 setTasks([]);
             } finally {
                 setLoading(false);
@@ -28,20 +28,19 @@ const useDailyTasks = (date) => {
         fetchTasks();
     }, [date]);
 
-    const refetch = () => {
-        const fetchTasks = async () => {
-            setLoading(true);
-            try {
-                const data = await getDailyTasks(date);
-                setTasks(data.tasks || []);
-            } catch (err) {
-                console.error("Failed to fetch daily tasks", err);
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchTasks();
+    const refetch = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const data = await getDailyTasks(date);
+            setTasks(data.tasks || []);
+        } catch (err) {
+            console.error("Failed to fetch daily tasks", err);
+            setError(err.response?.data?.message || err.message || "Failed to load tasks");
+            setTasks([]);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return { tasks, stats, loading, error, refetch };

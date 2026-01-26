@@ -6,7 +6,6 @@ const usePlannerStats = (tasks) => {
             return {
                 totalMinutes: 0,
                 completedMinutes: 0,
-                cognitiveLoad: 0,
                 completionRate: 0,
                 subjectDistribution: {},
                 priorityDistribution: { Low: 0, Medium: 0, High: 0 }
@@ -17,11 +16,6 @@ const usePlannerStats = (tasks) => {
         const completedTasks = tasks.filter(task => task.status === "Completed");
         const completedMinutes = completedTasks.reduce((sum, task) => sum + (task.actualDuration || task.duration), 0);
         
-        const priorityWeights = { Low: 1, Medium: 1.5, High: 2 };
-        const cognitiveLoad = tasks.reduce((sum, task) => {
-            return sum + (task.duration * priorityWeights[task.priority]);
-        }, 0);
-
         const completionRate = tasks.length > 0 ? (completedTasks.length / tasks.length) * 100 : 0;
 
         const subjectDistribution = tasks.reduce((acc, task) => {
@@ -37,7 +31,6 @@ const usePlannerStats = (tasks) => {
         return {
             totalMinutes,
             completedMinutes,
-            cognitiveLoad: Math.round(cognitiveLoad),
             completionRate: Math.round(completionRate),
             subjectDistribution,
             priorityDistribution

@@ -54,14 +54,14 @@ const CreateTaskInline = ({ selectedDate, onTaskCreated }) => {
     };
 
     return (
-        <div className="create-task-form animate-fadeIn">
-            <h3 className="form-title">⚔️ Create New Quest</h3>
+        <div className="bg-white border-2 border-dashed border-gray-300 rounded-lg p-6 mt-8 transition-all duration-200 hover:border-blue-400 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50">
+            <h3 className="text-lg font-semibold text-blue-600 text-center mb-6">⚔️ Create New Quest</h3>
             
             <form onSubmit={handleSubmit}>
-                <div className="form-grid">
-                    <div className="form-group">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                    <div className="md:col-span-2">
                         <input 
-                            className="form-input"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="What will you study? (Quest Name)"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
@@ -69,9 +69,9 @@ const CreateTaskInline = ({ selectedDate, onTaskCreated }) => {
                         />
                     </div>
                     
-                    <div className="form-group">
+                    <div>
                         <input 
-                            className="form-input"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Subject"
                             value={subject}
                             onChange={(e) => setSubject(e.target.value)}
@@ -79,9 +79,9 @@ const CreateTaskInline = ({ selectedDate, onTaskCreated }) => {
                         />
                     </div>
                     
-                    <div className="form-group">
+                    <div>
                         <input 
-                            className="form-input"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Duration"
                             type="number"
                             min="10"
@@ -91,22 +91,22 @@ const CreateTaskInline = ({ selectedDate, onTaskCreated }) => {
                         />
                     </div>
                     
-                    <div className="form-group">
+                    <div>
                         <select 
-                            className="form-select priority-select"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium"
                             value={priority} 
                             onChange={(e) => setPriority(e.target.value)}
                         >
-                            <option value="Low">⭐ Easy</option>
-                            <option value="Medium">⭐⭐ Medium</option>
-                            <option value="High">⭐⭐⭐ Hard</option>
+                            <option value="Low" className="text-green-600">⭐ Easy</option>
+                            <option value="Medium" className="text-yellow-600">⭐⭐ Medium</option>
+                            <option value="High" className="text-red-600">⭐⭐⭐ Hard</option>
                         </select>
                     </div>
                     
-                    <div className="form-group">
+                    <div>
                         <button 
                             type="submit" 
-                            className="btn btn-primary"
+                            className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? "Creating..." : "🚀 Launch Quest"}
@@ -115,9 +115,9 @@ const CreateTaskInline = ({ selectedDate, onTaskCreated }) => {
                 </div>
                 
                 {duration && (
-                    <div className="quest-preview">
-                        <div className="preview-rewards">
-                            <span>Reward Preview: {getXPPreview()} XP + {getGemPreview()}💎</span>
+                    <div className="mt-4 text-center">
+                        <div className="inline-block bg-gradient-to-r from-yellow-100 to-orange-100 border border-yellow-300 rounded-lg px-4 py-2 text-sm font-semibold text-yellow-800">
+                            Reward Preview: {getXPPreview()} XP + {getGemPreview()}💎
                         </div>
                     </div>
                 )}

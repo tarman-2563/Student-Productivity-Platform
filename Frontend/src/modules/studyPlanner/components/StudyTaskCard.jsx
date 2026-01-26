@@ -48,12 +48,13 @@ const StudyTaskCard = ({ task, onTaskUpdated }) => {
 
     if (isCompleted) {
         return (
-            <div className={`quest-card victory-card animate-fadeIn`}>
-                <div className="quest-header">
-                    <h4 className="quest-title">✅ VICTORY! {task.title}</h4>
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-6 relative animate-pulse">
+                <div className="absolute top-2 right-2 text-2xl">🎉</div>
+                <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-lg font-bold text-green-800">✅ VICTORY! {task.title}</h4>
                 </div>
-                <div className="task-subject">📖 {task.subject}</div>
-                <div className="victory-rewards">
+                <div className="text-green-700 font-medium mb-4">📖 {task.subject}</div>
+                <div className="bg-green-100 rounded-lg p-3 text-sm font-semibold text-green-800">
                     🏆 +{getXPReward()} XP • +{getGemReward()}💎 • Perfect timing!
                 </div>
             </div>
@@ -61,31 +62,43 @@ const StudyTaskCard = ({ task, onTaskUpdated }) => {
     }
 
     return (
-        <div className={`quest-card ${getQuestType()} animate-fadeIn`}>
-            <div className="quest-header">
-                <h4 className="quest-title">
+        <div className={`border-2 rounded-lg p-6 transition-all duration-200 hover:shadow-md ${
+            getQuestType() === "boss-battle" 
+                ? "bg-gradient-to-r from-red-50 to-pink-50 border-red-200" 
+                : "bg-gradient-to-r from-gray-50 to-blue-50 border-gray-200"
+        }`}>
+            <div className="flex justify-between items-center mb-4">
+                <h4 className="text-lg font-bold text-gray-900">
                     {getQuestType() === "boss-battle" ? "🔴 BOSS BATTLE: " : "⚔️ QUEST: "}
                     {task.title}
                 </h4>
-                <div className="quest-difficulty">
+                <div className="text-lg">
                     {getDifficultyStars()}
                 </div>
             </div>
             
-            <div className="task-subject">📖 {task.subject}</div>
+            <div className="text-gray-700 font-medium mb-4">📖 {task.subject}</div>
             
-            <div className="quest-rewards">
-                <span>💪 {task.duration} min</span>
+            <div className="flex flex-col sm:flex-row gap-4 mb-6 text-sm text-gray-600">
+                <span className="flex items-center space-x-1">
+                    <span>💪</span>
+                    <span>{task.duration} min</span>
+                </span>
                 <span>Reward: {getXPReward()} XP + {getGemReward()}💎</span>
             </div>
 
             {!showComplete && (
-                <div className="quest-actions">
+                <div className="flex gap-3">
                     <button 
-                        className={`btn-quest ${getQuestType() === "boss-battle" ? "btn-boss" : ""}`}
+                        className={`px-6 py-3 font-semibold rounded-lg transition-all duration-200 hover:shadow-md flex items-center space-x-2 ${
+                            getQuestType() === "boss-battle" 
+                                ? "bg-gradient-to-r from-red-600 to-pink-600 text-white hover:from-red-700 hover:to-pink-700" 
+                                : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700"
+                        }`}
                         onClick={() => setShowComplete(true)}
                     >
-                        {getQuestType() === "boss-battle" ? "⚔️ START BATTLE" : "🚀 START QUEST"}
+                        <span>{getQuestType() === "boss-battle" ? "⚔️" : "🚀"}</span>
+                        <span>{getQuestType() === "boss-battle" ? "START BATTLE" : "START QUEST"}</span>
                     </button>
                 </div>
             )}

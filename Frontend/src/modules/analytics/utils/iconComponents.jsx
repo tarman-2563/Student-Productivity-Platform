@@ -1,0 +1,15 @@
+export const Calendar = ({ className }) => <span className={className}>📅</span>;
+export const TrendingUp = ({ className }) => <span className={className}>📈</span>;
+export const TrendingDown = ({ className }) => <span className={className}>📉</span>;
+export const Target = ({ className }) => <span className={className}>🎯</span>;
+export const Clock = ({ className }) => <span className={className}>⏰</span>;
+export const BookOpen = ({ className }) => <span className={className}>📚</span>;
+export const Award = ({ className }) => <span className={className}>🏆</span>;
+export const BarChart3 = ({ className }) => <span className={className}>📊</span>;
+export const LineChart = ({ className }) => <span className={className}>📈</span>;
+export const PieChart = ({ className }) => <span className={className}>🥧</span>;
+export const CheckCircle = ({ className }) => <span className={className}>✅</span>;
+export const Circle = ({ className }) => <span className={className}>⭕</span>;
+export const Minus = ({ className }) => <span className={className}>➖</span>;
+export const ChevronLeft = ({ className }) => <span className={className}>◀</span>;
+export const ChevronRight = ({ className }) => <span className={className}>▶</span>;

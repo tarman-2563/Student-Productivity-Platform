@@ -94,9 +94,8 @@ const deleteStudyTask=async(req,res)=>{
         if(!task){
             return res.status(404).json({message:"Task not found"});
         }
-        const now=new Date();
-        if(task.status==="Completed" || now>task.scheduledFor){
-            return res.status(400).json({message:"Task cannot be deleted"});
+        if(task.status==="Completed"){
+            return res.status(400).json({message:"Completed tasks cannot be deleted"});
         }
         await task.deleteOne();
         res.status(200).json({message:"Task deleted successfully"});
