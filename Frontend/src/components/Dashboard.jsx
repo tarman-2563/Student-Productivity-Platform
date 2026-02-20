@@ -30,7 +30,7 @@ const Dashboard = ({ onNavigate }) => {
       const today = new Date().toISOString().split('T')[0];
       
       const [tasksResponse, goalsResponse, notesResponse, analyticsResponse] = await Promise.allSettled([
-        axios.get(`/studyTasks?date=${today}`),
+        axios.get(`/study-tasks?date=${today}`),
         axios.get('/goals'),
         axios.get('/notes'),
         axios.get('/analytics?timeRange=week')

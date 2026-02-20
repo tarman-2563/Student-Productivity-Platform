@@ -2,9 +2,13 @@ import { useState } from "react";
 import useDailyTasks from "../hooks/useDailyTasks";
 import { createStudyTask, completeStudyTask, updateStudyTask, deleteStudyTask } from "../services/studyTask.api";
 import { formatDate } from "../utils/dateHelpers";
+import CalendarView from "../components/CalendarView";
+import TaskDetailModal from "../components/TaskDetailModal";
 
 const DailyPlanner = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [viewMode, setViewMode] = useState('list'); // 'list' or 'calendar'
+    const [selectedTask, setSelectedTask] = useState(null);
     const { tasks, stats, loading, error, refetch } = useDailyTasks(selectedDate);
 
     const handleDateChange = (e) => {
@@ -75,9 +79,65 @@ const DailyPlanner = () => {
     const completedCount = tasks.filter(t => t.status === "Completed").length;
     const isToday = selectedDate.toDateString() === new Date().toDateString();
 
+    const handleCalendarDateSelect = (date) => {
+        setSelectedDate(date);
+        setViewMode('list'); // Switch to list view when date is selected
+    };
+
+    const handleTaskClick = (task) => {
+        setSelectedTask(task);
+    };
+
+    const handleCloseTaskModal = () => {
+        setSelectedTask(null);
+    };
+
     return (
-        <div className="max-w-4xl mx-auto p-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div className="max-w-7xl mx-auto p-6">
+            {/* View Mode Toggle */}
+            <div className="flex items-center justify-between mb-6">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900">Study Planner</h1>
+                    <p className="text-gray-600 text-sm mt-1">Plan and track your study schedule</p>
+                </div>
+                <div className="flex bg-white border border-gray-200 rounded-lg p-1 shadow-sm">
+                    <button
+                        onClick={() => setViewMode('list')}
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                            viewMode === 'list'
+                                ? 'bg-blue-600 text-white shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                        }`}
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <span>List View</span>
+                    </button>
+                    <button
+                        onClick={() => setViewMode('calendar')}
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                            viewMode === 'calendar'
+                                ? 'bg-blue-600 text-white shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                        }`}
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>Calendar View</span>
+                    </button>
+                </div>
+            </div>
+
+            {viewMode === 'calendar' ? (
+                <CalendarView 
+                    onDateSelect={handleCalendarDateSelect}
+                    onTaskClick={handleTaskClick}
+                />
+            ) : (
+                <div className="max-w-4xl mx-auto">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
                 <div className="flex items-center space-x-3 mb-4 sm:mb-0">
                     <button 
                         className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md transition-colors"
@@ -174,6 +234,18 @@ const DailyPlanner = () => {
                     )}
                 </div>
             </div>
+        </div>
+            )}
+
+            {/* Task Detail Modal */}
+            {selectedTask && (
+                <TaskDetailModal
+                    task={selectedTask}
+                    onClose={handleCloseTaskModal}
+                    onComplete={handleCompleteTask}
+                    onDelete={handleDeleteTask}
+                />
+            )}
         </div>
     );
 };

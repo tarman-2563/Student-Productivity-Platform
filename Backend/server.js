@@ -8,6 +8,7 @@ const studyTaskRouter=require("./routes/studyTask.routes");
 const goalRouter=require("./routes/goal.routes");
 const noteRouter=require("./routes/note.routes");
 const analyticsRouter=require("./routes/analytics.routes");
+const resourceRouter=require("./routes/resource.routes");
 
 const app=express();
 const PORT=process.env.PORT || 5000;
@@ -26,6 +27,10 @@ app.use("/api/study-tasks",studyTaskRouter);
 app.use("/api/goals",goalRouter);
 app.use("/api/notes",noteRouter);
 app.use("/api/analytics",analyticsRouter);
+app.use("/api/resources",resourceRouter);
+
+// Serve uploaded files
+app.use("/uploads",express.static("uploads"));
 
 app.get("/api/health",(req,res)=>{
     res.status(200).json({

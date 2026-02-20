@@ -32,7 +32,7 @@ const progressLogSchema = new mongoose.Schema({
         maxLength: 500
     },
     timeSpent: {
-        type: Number, // minutes
+        type: Number, 
         min: 0
     },
     progressBefore: {
