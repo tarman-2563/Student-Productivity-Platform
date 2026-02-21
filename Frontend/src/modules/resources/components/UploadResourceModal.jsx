@@ -20,7 +20,6 @@ const UploadResourceModal = ({ onClose, onSuccess }) => {
         const file = e.target.files[0];
         if (file) {
             setSelectedFile(file);
-            // Auto-detect type based on file extension
             const ext = file.name.split('.').pop().toLowerCase();
             let type = 'other';
             if (['pdf'].includes(ext)) type = 'pdf';

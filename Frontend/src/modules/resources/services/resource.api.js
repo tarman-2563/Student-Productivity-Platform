@@ -9,8 +9,10 @@ export const createResource = async (formData) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error creating resource:', error);
-        throw new Error(error.response?.data?.message || 'Failed to create resource');
+        if (error.response?.data) {
+            console.error('Resource creation failed:', error.response.data);
+        }
+        throw new Error(error.response?.data?.message || error.response?.data?.errors?.join(', ') || 'Failed to create resource');
     }
 };
 

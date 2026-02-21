@@ -28,7 +28,10 @@ const CalendarView = ({ onDateSelect, onTaskClick }) => {
             while (currentDateIter <= endDate) {
                 try {
                     const data = await getDailyTasks(new Date(currentDateIter));
-                    const dateKey = currentDateIter.toISOString().split('T')[0];
+                    const year = currentDateIter.getFullYear();
+                    const month = String(currentDateIter.getMonth() + 1).padStart(2, '0');
+                    const day = String(currentDateIter.getDate()).padStart(2, '0');
+                    const dateKey = `${year}-${month}-${day}`;
                     tasksData[dateKey] = data.tasks || [];
                 } catch (err) {
                     console.error('Error fetching tasks for date:', currentDateIter, err);
@@ -84,7 +87,8 @@ const CalendarView = ({ onDateSelect, onTaskClick }) => {
 
     const handleDateClick = (date) => {
         if (onDateSelect) {
-            onDateSelect(date);
+            const localDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
+            onDateSelect(localDate);
         }
     };
 
@@ -199,7 +203,6 @@ const CalendarView = ({ onDateSelect, onTaskClick }) => {
     );
 };
 
-// Month View Component
 const MonthView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
     const getDaysInMonth = () => {
         const year = currentDate.getFullYear();
@@ -258,7 +261,11 @@ const MonthView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
             {/* Calendar grid */}
             <div className="grid grid-cols-7 gap-2">
                 {days.map((day, index) => {
-                    const dateKey = day.date.toISOString().split('T')[0];
+                    // Use local date format for consistency
+                    const year = day.date.getFullYear();
+                    const month = String(day.date.getMonth() + 1).padStart(2, '0');
+                    const dayNum = String(day.date.getDate()).padStart(2, '0');
+                    const dateKey = `${year}-${month}-${dayNum}`;
                     const dayTasks = tasksMap[dateKey] || [];
                     const isToday = day.date.toDateString() === today.toDateString();
                     const completedTasks = dayTasks.filter(t => t.status === 'Completed').length;
@@ -280,7 +287,6 @@ const MonthView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
     );
 };
 
-// Week View Component
 const WeekView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
     const getWeekDays = () => {
         const startOfWeek = new Date(currentDate);
@@ -303,7 +309,11 @@ const WeekView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
     return (
         <div className="grid grid-cols-7 gap-4">
             {weekDays.map((date, index) => {
-                const dateKey = date.toISOString().split('T')[0];
+                // Use local date format for consistency
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const dateKey = `${year}-${month}-${day}`;
                 const dayTasks = tasksMap[dateKey] || [];
                 const isToday = date.toDateString() === today.toDateString();
                 const completedTasks = dayTasks.filter(t => t.status === 'Completed').length;
@@ -362,7 +372,6 @@ const WeekView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
     );
 };
 
-// Calendar Day Component
 const CalendarDay = ({ day, isToday, tasks, completedTasks, onDateClick, onTaskClick }) => {
     const getPriorityColor = (priority) => {
         switch (priority) {
@@ -436,7 +445,6 @@ const CalendarDay = ({ day, isToday, tasks, completedTasks, onDateClick, onTaskC
     );
 };
 
-// Week Task Card Component
 const WeekTaskCard = ({ task, onClick }) => {
     const getPriorityColor = (priority) => {
         switch (priority) {

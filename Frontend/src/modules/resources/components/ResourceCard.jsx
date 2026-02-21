@@ -59,8 +59,7 @@ const ResourceCard = ({ resource, onClick, onUpdate }) => {
                 </div>
                 
                 <div className="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
-                    <span>👁️ {resource.viewCount || 0}</span>
-                    <span>⬇️ {resource.downloadCount || 0}</span>
+                    <span className="text-gray-600">{resource.category}</span>
                     <span>{new Date(resource.createdAt).toLocaleDateString()}</span>
                 </div>
             </div>

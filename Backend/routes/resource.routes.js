@@ -21,13 +21,11 @@ const {
 
 const resourceRouter = express.Router();
 
-// Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, '..', 'uploads');
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Configure multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, uploadsDir);
@@ -39,7 +37,6 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    // Allowed file types
     const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx|txt|ppt|pptx|xls|xlsx|zip|mp4|mp3/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = allowedTypes.test(file.mimetype);
@@ -54,22 +51,19 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 10 * 1024 * 1024 // 10MB limit
+        fileSize: 10 * 1024 * 1024
     },
     fileFilter: fileFilter
 });
 
-// Validation middleware
 const resourceValidation = [
-    body('title').trim().isLength({ min: 1, max: 200 }).withMessage('Title must be between 1 and 200 characters'),
+    body('title').trim().notEmpty().withMessage('Title is required').isLength({ min: 1, max: 200 }).withMessage('Title must be between 1 and 200 characters'),
     body('description').optional().trim().isLength({ max: 1000 }).withMessage('Description must be less than 1000 characters'),
-    body('type').isIn(['pdf', 'image', 'link', 'document', 'video', 'other']).withMessage('Invalid resource type'),
+    body('type').notEmpty().withMessage('Type is required').isIn(['pdf', 'image', 'link', 'document', 'video', 'other']).withMessage('Invalid resource type'),
     body('category').trim().notEmpty().withMessage('Category is required'),
-    body('subject').trim().notEmpty().withMessage('Subject is required'),
-    body('tags').optional().isArray().withMessage('Tags must be an array')
+    body('subject').trim().notEmpty().withMessage('Subject is required')
 ];
 
-// Routes
 resourceRouter.post(
     "/",
     authMiddleware,

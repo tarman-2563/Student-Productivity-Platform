@@ -8,7 +8,7 @@ const ResourceStats = ({ stats }) => {
     };
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between">
                     <div>
@@ -29,18 +29,6 @@ const ResourceStats = ({ stats }) => {
                     </div>
                     <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-2xl">
                         💾
-                    </div>
-                </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <p className="text-sm font-medium text-gray-600">Total Views</p>
-                        <p className="text-2xl font-bold text-gray-900 mt-1">{stats.totalViews || 0}</p>
-                    </div>
-                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-2xl">
-                        👁️
                     </div>
                 </div>
             </div>

@@ -209,10 +209,10 @@ const Dashboard = ({ onNavigate }) => {
   }
 
   const quickActions = [
-    { title: 'Add Task', icon: '➕', action: () => onNavigate('planner'), color: 'bg-blue-500' },
-    { title: 'Create Goal', icon: '🎯', action: () => onNavigate('goals'), color: 'bg-green-500' },
-    { title: 'New Note', icon: '📝', action: () => onNavigate('notes'), color: 'bg-purple-500' },
-    { title: 'View Analytics', icon: '📊', action: () => onNavigate('analytics'), color: 'bg-orange-500' },
+    { title: 'Add Task', icon: '➕', action: () => onNavigate('planner'), color: 'bg-blue-600 hover:bg-blue-700' },
+    { title: 'Create Goal', icon: '🎯', action: () => onNavigate('goals'), color: 'bg-blue-600 hover:bg-blue-700' },
+    { title: 'New Note', icon: '📝', action: () => onNavigate('notes'), color: 'bg-blue-600 hover:bg-blue-700' },
+    { title: 'View Analytics', icon: '📊', action: () => onNavigate('analytics'), color: 'bg-blue-600 hover:bg-blue-700' },
   ];
 
   return (
@@ -276,23 +276,6 @@ const Dashboard = ({ onNavigate }) => {
           />
         </div>
 
-        {stats.todayTasks > 0 && (
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-6 mb-8 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-xl font-semibold mb-2">You're doing great! 🌟</h3>
-                <p className="text-blue-100">
-                  You've completed {Math.round((stats.completedTasks / stats.todayTasks) * 100)}% of today's tasks. 
-                  {stats.completedTasks === stats.todayTasks ? ' Perfect day! 🎉' : ' Keep up the momentum!'}
-                </p>
-              </div>
-              <div className="text-6xl opacity-20">
-                {stats.completedTasks === stats.todayTasks ? '🎉' : '🚀'}
-              </div>
-            </div>
-          </div>
-        )}
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-soft p-6 animate-fadeInUp">
@@ -309,33 +292,6 @@ const Dashboard = ({ onNavigate }) => {
                   </button>
                 ))}
               </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-soft p-6 animate-fadeInUp">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
-            <div className="space-y-4">
-              {recentActivity.length > 0 ? (
-                recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm">{activity.icon}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
-                        {activity.title}
-                      </p>
-                      <p className="text-xs text-gray-500">{activity.time}</p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-2 opacity-50">📝</div>
-                  <p className="text-gray-500 text-sm">No recent activity</p>
-                  <p className="text-gray-400 text-xs">Start by creating a task or goal!</p>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -356,7 +312,6 @@ const Dashboard = ({ onNavigate }) => {
                 todayTasks.map((task, index) => (
                   <ScheduleItem 
                     key={task._id || index}
-                    time={task.scheduledTime || '09:00'}
                     title={task.title}
                     duration={`${task.duration || 60}m`}
                     status={task.status}
@@ -444,9 +399,8 @@ const StatCard = ({ title, value, subtitle, icon, color, progress, trend }) => (
   </div>
 );
 
-const ScheduleItem = ({ time, title, duration, status }) => (
+const ScheduleItem = ({ title, duration, status }) => (
   <div className="flex items-center space-x-3 p-3 bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-lg hover:from-gray-100 hover:to-blue-100/50 transition-all duration-200 cursor-pointer group">
-    <div className="text-sm font-medium text-gray-900 w-16 font-mono">{time}</div>
     <div className="flex-1">
       <p className={`text-sm font-medium transition-colors ${
         status === 'Completed' ? 'text-gray-500 line-through' : 'text-gray-900 group-hover:text-blue-700'

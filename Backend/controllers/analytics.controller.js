@@ -14,12 +14,14 @@ const getAnalyticsData=async(req,res)=>{
         const yearlyData=await getYearlyData(userId);
         const goalProgress=await getGoalProgressData(userId);
         const subjectStats=await getSubjectStats(userId,startDate,endDate);
+        const productivityTrends=await getProductivityTrends(userId,startDate,endDate);
         
         res.status(200).json({
             overview,
             yearlyData,
             goalProgress,
             subjectStats,
+            productivityTrends,
             timeRange,
             dateRange:{startDate,endDate}
         });

@@ -5,7 +5,7 @@ import GoalStats from '../components/GoalStats';
 import GoalDetailModal from '../components/GoalDetailModal';
 import ProgressLogForm from '../components/ProgressLogForm';
 import useGoals from '../hooks/useGoals';
-import { createGoal, updateGoal, addProgressLog } from '../services/goals.api';
+import { createGoal, updateGoal, addProgressLog, deleteGoal } from '../services/goals.api';
 
 const Goals = () => {
     const [showCreateForm, setShowCreateForm] = useState(false);
@@ -32,8 +32,14 @@ const Goals = () => {
         }
     };
 
-    const handleDeleteGoal = (goalId) => {
-        refetch();
+    const handleDeleteGoal = async (goalId) => {
+        try {
+            await deleteGoal(goalId);
+            refetch();
+        } catch (err) {
+            console.error('Failed to delete goal:', err);
+            alert('Failed to delete goal. Please try again.');
+        }
     };
 
     const handleViewDetails = (goalId) => {

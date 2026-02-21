@@ -12,15 +12,12 @@ API.interceptors.request.use((config) => {
     return config;
 });
 
-// Add response interceptor to handle 401 errors
 API.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            // Token is invalid or expired
             console.log('🔒 Authentication required. Please log in again.');
             localStorage.removeItem('token');
-            // Reload to trigger login screen
             window.location.reload();
         }
         return Promise.reject(error);

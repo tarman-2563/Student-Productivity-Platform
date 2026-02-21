@@ -1,23 +1,6 @@
-import { deleteResource, downloadResource } from '../services/resource.api';
+import { deleteResource } from '../services/resource.api';
 
 const ResourceDetailModal = ({ resource, onClose, onUpdate }) => {
-    const handleDownload = async () => {
-        try {
-            const blob = await downloadResource(resource._id);
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = resource.fileName || resource.title;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        } catch (err) {
-            console.error('Download failed:', err);
-            alert('Failed to download resource');
-        }
-    };
-
     const handleDelete = async () => {
         if (window.confirm('Are you sure you want to delete this resource?')) {
             try {
@@ -96,15 +79,7 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate }) => {
                         </div>
                     )}
 
-                    <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-200">
-                        <div className="text-center">
-                            <p className="text-2xl font-bold text-gray-900">{resource.viewCount || 0}</p>
-                            <p className="text-sm text-gray-600">Views</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-2xl font-bold text-gray-900">{resource.downloadCount || 0}</p>
-                            <p className="text-sm text-gray-600">Downloads</p>
-                        </div>
+                    <div className="flex items-center justify-center pt-4 border-t border-gray-200">
                         <div className="text-center">
                             <p className="text-sm font-medium text-gray-900">
                                 {new Date(resource.createdAt).toLocaleDateString()}
@@ -121,22 +96,12 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate }) => {
                     >
                         Delete
                     </button>
-                    <div className="flex items-center space-x-3">
-                        <button
-                            onClick={handleOpenLink}
-                            className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-colors font-medium"
-                        >
-                            Open
-                        </button>
-                        {resource.fileUrl && (
-                            <button
-                                onClick={handleDownload}
-                                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium shadow-sm"
-                            >
-                                Download
-                            </button>
-                        )}
-                    </div>
+                    <button
+                        onClick={handleOpenLink}
+                        className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium shadow-sm"
+                    >
+                        Open
+                    </button>
                 </div>
             </div>
         </div>

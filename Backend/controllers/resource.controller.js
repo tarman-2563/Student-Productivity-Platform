@@ -4,30 +4,59 @@ const mongoose = require("mongoose");
 const path = require("path");
 const fs = require("fs").promises;
 
-// Create a new resource
 const createResource = async (req, res) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ message: "Validation failed", errors: errors.array() });
+            console.log("Validation errors:", errors.array());
+            return res.status(400).json({ 
+                message: "Validation failed", 
+                errors: errors.array().map(err => `${err.param}: ${err.msg}`)
+            });
         }
 
         const { title, description, type, category, subject, externalUrl, tags, linkedNotes, linkedTasks, linkedGoals } = req.body;
         
+        // Additional validation
+        if (!title || title.trim() === '') {
+            return res.status(400).json({ message: "Title is required" });
+        }
+        if (!type) {
+            return res.status(400).json({ message: "Type is required" });
+        }
+        if (!category || category.trim() === '') {
+            return res.status(400).json({ message: "Category is required" });
+        }
+        if (!subject || subject.trim() === '') {
+            return res.status(400).json({ message: "Subject is required" });
+        }
+        
         let resourceData = {
             userId: req.user.id,
-            title,
-            description,
+            title: title.trim(),
+            description: description ? description.trim() : '',
             type,
-            category,
-            subject,
-            tags: tags ? (Array.isArray(tags) ? tags : JSON.parse(tags)) : [],
+            category: category.trim(),
+            subject: subject.trim(),
+            tags: [],
             linkedNotes: linkedNotes || [],
             linkedTasks: linkedTasks || [],
             linkedGoals: linkedGoals || []
         };
 
-        // Handle file upload
+        if (tags) {
+            try {
+                if (typeof tags === 'string') {
+                    resourceData.tags = JSON.parse(tags);
+                } else if (Array.isArray(tags)) {
+                    resourceData.tags = tags;
+                }
+            } catch (e) {
+                console.error('Error parsing tags:', e);
+                resourceData.tags = [];
+            }
+        }
+
         if (req.file) {
             resourceData.fileUrl = `/uploads/${req.file.filename}`;
             resourceData.fileName = req.file.originalname;
@@ -36,9 +65,8 @@ const createResource = async (req, res) => {
             resourceData.cloudProvider = "local";
         }
 
-        // Handle external URL
-        if (externalUrl) {
-            resourceData.externalUrl = externalUrl;
+        if (externalUrl && externalUrl.trim() !== '') {
+            resourceData.externalUrl = externalUrl.trim();
         }
 
         const newResource = await Resource.create(resourceData);
@@ -49,11 +77,10 @@ const createResource = async (req, res) => {
         });
     } catch (err) {
         console.error("Create resource error:", err);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
     }
 };
 
-// Get all resources with filters
 const getResources = async (req, res) => {
     try {
         const { 
@@ -110,7 +137,6 @@ const getResources = async (req, res) => {
     }
 };
 
-// Get resource by ID
 const getResourceById = async (req, res) => {
     try {
         const resourceId = req.params.id;
@@ -123,9 +149,6 @@ const getResourceById = async (req, res) => {
             return res.status(404).json({ message: "Resource not found" });
         }
 
-        // Increment view count
-        await resource.incrementView();
-
         res.status(200).json({ resource });
     } catch (err) {
         console.error("Get resource by ID error:", err);
@@ -133,7 +156,6 @@ const getResourceById = async (req, res) => {
     }
 };
 
-// Update resource
 const updateResource = async (req, res) => {
     try {
         const resourceId = req.params.id;
@@ -163,7 +185,6 @@ const updateResource = async (req, res) => {
     }
 };
 
-// Delete resource
 const deleteResource = async (req, res) => {
     try {
         const resourceId = req.params.id;
@@ -192,7 +213,6 @@ const deleteResource = async (req, res) => {
     }
 };
 
-// Toggle favorite
 const toggleFavorite = async (req, res) => {
     try {
         const resourceId = req.params.id;
@@ -215,7 +235,6 @@ const toggleFavorite = async (req, res) => {
     }
 };
 
-// Download resource
 const downloadResource = async (req, res) => {
     try {
         const resourceId = req.params.id;
@@ -229,9 +248,6 @@ const downloadResource = async (req, res) => {
             return res.status(400).json({ message: "No file available for download" });
         }
 
-        // Increment download count
-        await resource.incrementDownload();
-
         const filePath = path.join(__dirname, '..', resource.fileUrl);
         res.download(filePath, resource.fileName);
     } catch (err) {
@@ -240,7 +256,6 @@ const downloadResource = async (req, res) => {
     }
 };
 
-// Get resource statistics
 const getResourceStats = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -252,9 +267,7 @@ const getResourceStats = async (req, res) => {
                     _id: null,
                     totalResources: { $sum: 1 },
                     totalSize: { $sum: "$fileSize" },
-                    favoriteCount: { $sum: { $cond: ["$isFavorite", 1, 0] } },
-                    totalViews: { $sum: "$viewCount" },
-                    totalDownloads: { $sum: "$downloadCount" }
+                    favoriteCount: { $sum: { $cond: ["$isFavorite", 1, 0] } }
                 }
             }
         ]);
@@ -274,9 +287,7 @@ const getResourceStats = async (req, res) => {
         const result = stats[0] || {
             totalResources: 0,
             totalSize: 0,
-            favoriteCount: 0,
-            totalViews: 0,
-            totalDownloads: 0
+            favoriteCount: 0
         };
 
         result.typeBreakdown = typeBreakdown;
@@ -289,7 +300,6 @@ const getResourceStats = async (req, res) => {
     }
 };
 
-// Get resources by subject (for quick access)
 const getResourcesBySubject = async (req, res) => {
     try {
         const { subject } = req.params;
@@ -334,7 +344,6 @@ const linkResource = async (req, res) => {
     }
 };
 
-// Unlink resource
 const unlinkResource = async (req, res) => {
     try {
         const resourceId = req.params.id;
