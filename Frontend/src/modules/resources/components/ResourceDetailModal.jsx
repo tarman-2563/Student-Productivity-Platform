@@ -18,7 +18,7 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate }) => {
         if (resource.externalUrl) {
             window.open(resource.externalUrl, '_blank');
         } else if (resource.fileUrl) {
-            window.open(`http://localhost:5757${resource.fileUrl}`, '_blank');
+            window.open(`https://student-productivity-platform.onrender.com${resource.fileUrl}`, '_blank');
         }
     };
 

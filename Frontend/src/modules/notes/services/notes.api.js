@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5757/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://student-productivity-platform.onrender.com/api';
 
 export const getNotes = async () => {
   try {

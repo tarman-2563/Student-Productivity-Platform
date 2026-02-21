@@ -1,5 +1,5 @@
 // Analytics API Service
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5757/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://student-productivity-platform.onrender.com/api';
 
 // Get comprehensive analytics data
 export const getAnalyticsData = async (timeRange = 'week') => {
