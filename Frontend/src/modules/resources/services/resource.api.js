@@ -88,39 +88,3 @@ export const getResourceStats = async () => {
         throw new Error(error.response?.data?.message || 'Failed to fetch resource stats');
     }
 };
-
-export const getResourcesBySubject = async (subject) => {
-    try {
-        const response = await API.get(`/resources/subject/${subject}`);
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching resources by subject:', error);
-        throw new Error(error.response?.data?.message || 'Failed to fetch resources');
-    }
-};
-
-export const linkResource = async (resourceId, linkType, linkId) => {
-    try {
-        const response = await API.post(`/resources/${resourceId}/link`, {
-            linkType,
-            linkId
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error linking resource:', error);
-        throw new Error(error.response?.data?.message || 'Failed to link resource');
-    }
-};
-
-export const unlinkResource = async (resourceId, linkType, linkId) => {
-    try {
-        const response = await API.post(`/resources/${resourceId}/unlink`, {
-            linkType,
-            linkId
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error unlinking resource:', error);
-        throw new Error(error.response?.data?.message || 'Failed to unlink resource');
-    }
-};

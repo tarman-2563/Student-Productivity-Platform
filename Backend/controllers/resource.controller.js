@@ -376,9 +376,5 @@ module.exports = {
     updateResource,
     deleteResource,
     toggleFavorite,
-    downloadResource,
-    getResourceStats,
-    getResourcesBySubject,
-    linkResource,
-    unlinkResource
+    getResourceStats
 };

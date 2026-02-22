@@ -488,8 +488,5 @@ const seedAnalyticsData=async(req,res)=>{
 };
 
 module.exports={
-    getAnalyticsData,
-    getStudyStats,
-    recordStudySession,
-    seedAnalyticsData
+    getAnalyticsData
 };

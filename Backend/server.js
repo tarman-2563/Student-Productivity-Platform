@@ -29,7 +29,6 @@ app.use("/api/notes",noteRouter);
 app.use("/api/analytics",analyticsRouter);
 app.use("/api/resources",resourceRouter);
 
-// Serve uploaded files
 app.use("/uploads",express.static("uploads"));
 
 app.get("/api/health",(req,res)=>{

@@ -12,11 +12,7 @@ const {
     updateResource,
     deleteResource,
     toggleFavorite,
-    downloadResource,
-    getResourceStats,
-    getResourcesBySubject,
-    linkResource,
-    unlinkResource
+    getResourceStats
 } = require("../controllers/resource.controller");
 
 const resourceRouter = express.Router();
@@ -74,13 +70,9 @@ resourceRouter.post(
 
 resourceRouter.get("/", authMiddleware, getResources);
 resourceRouter.get("/stats", authMiddleware, getResourceStats);
-resourceRouter.get("/subject/:subject", authMiddleware, getResourcesBySubject);
 resourceRouter.get("/:id", authMiddleware, getResourceById);
 resourceRouter.put("/:id", authMiddleware, updateResource);
 resourceRouter.delete("/:id", authMiddleware, deleteResource);
 resourceRouter.patch("/:id/favorite", authMiddleware, toggleFavorite);
-resourceRouter.get("/:id/download", authMiddleware, downloadResource);
-resourceRouter.post("/:id/link", authMiddleware, linkResource);
-resourceRouter.post("/:id/unlink", authMiddleware, unlinkResource);
 
 module.exports = resourceRouter;
