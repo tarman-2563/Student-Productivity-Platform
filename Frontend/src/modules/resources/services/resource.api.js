@@ -67,18 +67,6 @@ export const toggleFavorite = async (resourceId) => {
     }
 };
 
-export const downloadResource = async (resourceId) => {
-    try {
-        const response = await API.get(`/resources/${resourceId}/download`, {
-            responseType: 'blob'
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error downloading resource:', error);
-        throw new Error(error.response?.data?.message || 'Failed to download resource');
-    }
-};
-
 export const getResourceStats = async () => {
     try {
         const response = await API.get('/resources/stats');

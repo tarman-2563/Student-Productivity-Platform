@@ -235,26 +235,7 @@ const toggleFavorite = async (req, res) => {
     }
 };
 
-const downloadResource = async (req, res) => {
-    try {
-        const resourceId = req.params.id;
-        const resource = await Resource.findOne({ _id: resourceId, userId: req.user.id });
 
-        if (!resource) {
-            return res.status(404).json({ message: "Resource not found" });
-        }
-
-        if (!resource.fileUrl) {
-            return res.status(400).json({ message: "No file available for download" });
-        }
-
-        const filePath = path.join(__dirname, '..', resource.fileUrl);
-        res.download(filePath, resource.fileName);
-    } catch (err) {
-        console.error("Download resource error:", err);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
 
 const getResourceStats = async (req, res) => {
     try {
@@ -300,74 +281,7 @@ const getResourceStats = async (req, res) => {
     }
 };
 
-const getResourcesBySubject = async (req, res) => {
-    try {
-        const { subject } = req.params;
-        const resources = await Resource.find({
-            userId: req.user.id,
-            subject: subject
-        }).sort({ createdAt: -1 }).limit(10);
 
-        res.status(200).json({ resources });
-    } catch (err) {
-        console.error("Get resources by subject error:", err);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
-
-// Link resource to note/task/goal
-const linkResource = async (req, res) => {
-    try {
-        const resourceId = req.params.id;
-        const { linkType, linkId } = req.body; // linkType: 'note', 'task', 'goal'
-
-        const resource = await Resource.findOne({ _id: resourceId, userId: req.user.id });
-
-        if (!resource) {
-            return res.status(404).json({ message: "Resource not found" });
-        }
-
-        const linkField = `linked${linkType.charAt(0).toUpperCase() + linkType.slice(1)}s`;
-        
-        if (!resource[linkField].includes(linkId)) {
-            resource[linkField].push(linkId);
-            await resource.save();
-        }
-
-        res.status(200).json({
-            message: "Resource linked successfully",
-            resource
-        });
-    } catch (err) {
-        console.error("Link resource error:", err);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
-
-const unlinkResource = async (req, res) => {
-    try {
-        const resourceId = req.params.id;
-        const { linkType, linkId } = req.body;
-
-        const resource = await Resource.findOne({ _id: resourceId, userId: req.user.id });
-
-        if (!resource) {
-            return res.status(404).json({ message: "Resource not found" });
-        }
-
-        const linkField = `linked${linkType.charAt(0).toUpperCase() + linkType.slice(1)}s`;
-        resource[linkField] = resource[linkField].filter(id => id.toString() !== linkId);
-        await resource.save();
-
-        res.status(200).json({
-            message: "Resource unlinked successfully",
-            resource
-        });
-    } catch (err) {
-        console.error("Unlink resource error:", err);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
 
 module.exports = {
     createResource,

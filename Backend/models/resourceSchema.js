@@ -86,20 +86,7 @@ const resourceSchema = new mongoose.Schema({
     linkedGoals: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Goal"
-    }],
-    // Access tracking
-    viewCount: {
-        type: Number,
-        default: 0
-    },
-    lastAccessedAt: {
-        type: Date,
-        default: Date.now
-    },
-    downloadCount: {
-        type: Number,
-        default: 0
-    }
+    }]
 }, {
     timestamps: true
 });
@@ -120,18 +107,7 @@ resourceSchema.virtual('formattedSize').get(function() {
     return Math.round(this.fileSize / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
 });
 
-// Method to increment view count
-resourceSchema.methods.incrementView = function() {
-    this.viewCount += 1;
-    this.lastAccessedAt = new Date();
-    return this.save();
-};
 
-// Method to increment download count
-resourceSchema.methods.incrementDownload = function() {
-    this.downloadCount += 1;
-    return this.save();
-};
 
 const Resource = mongoose.model("Resource", resourceSchema);
 module.exports = Resource;

@@ -63,8 +63,6 @@ const ResourceFilters = ({ filters, onFilterChange, resources }) => {
                 >
                     <option value="createdAt">Newest First</option>
                     <option value="title">Title A-Z</option>
-                    <option value="viewCount">Most Viewed</option>
-                    <option value="downloadCount">Most Downloaded</option>
                 </select>
             </div>
         </div>
