@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API=axios.create({
-    baseURL:"http://localhost:5757/api"
+    baseURL:"https://student-productivity-platform.onrender.com/api"
 })
 
 export const registerUser=async(userData)=>{

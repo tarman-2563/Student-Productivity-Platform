@@ -17,7 +17,6 @@ const createResource = async (req, res) => {
 
         const { title, description, type, category, subject, externalUrl, tags, linkedNotes, linkedTasks, linkedGoals } = req.body;
         
-        // Additional validation
         if (!title || title.trim() === '') {
             return res.status(400).json({ message: "Title is required" });
         }
@@ -104,17 +103,14 @@ const getResources = async (req, res) => {
 
         let query = Resource.find(filter);
 
-        // Text search
         if (search) {
             query = query.find({ $text: { $search: search } });
         }
 
-        // Sorting
         const sortOptions = {};
         sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
         query = query.sort(sortOptions);
 
-        // Pagination
         const skip = (parseInt(page) - 1) * parseInt(limit);
         query = query.skip(skip).limit(parseInt(limit));
 
@@ -165,7 +161,6 @@ const updateResource = async (req, res) => {
             return res.status(404).json({ message: "Resource not found" });
         }
 
-        // Update fields
         const allowedUpdates = ['title', 'description', 'category', 'subject', 'tags', 'linkedNotes', 'linkedTasks', 'linkedGoals'];
         allowedUpdates.forEach(field => {
             if (req.body[field] !== undefined) {
@@ -194,7 +189,6 @@ const deleteResource = async (req, res) => {
             return res.status(404).json({ message: "Resource not found" });
         }
 
-        // Delete file from storage if it exists
         if (resource.fileUrl && resource.cloudProvider === 'local') {
             try {
                 const filePath = path.join(__dirname, '..', resource.fileUrl);

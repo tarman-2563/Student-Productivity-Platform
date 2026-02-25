@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import useAnalytics from '../hooks/useAnalytics';
 import ProductivityTrends from '../components/ProductivityTrends';
 
 const AnalyticsDashboard = () => {
-  const [timeRange, setTimeRange] = useState('week');
-  const { data, loading, error, refetch } = useAnalytics(timeRange);
+  const { data, loading, error, refetch } = useAnalytics('week');
 
   if (loading) {
     return (
@@ -50,8 +48,7 @@ const AnalyticsDashboard = () => {
   // Check if we have any data
   const hasData = data && (
     data.overview.totalStudyTime > 0 || 
-    data.studyTrends.length > 0 || 
-    data.goalProgress.length > 0
+    data.productivityTrends.length > 0
   );
 
   if (!hasData && !loading) {
@@ -101,32 +98,9 @@ const AnalyticsDashboard = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Study Analytics</h1>
-            <p className="text-gray-600">Track your study progress and habits</p>
-          </div>
-          
-          {/* Time Range Selector */}
-          <div className="flex bg-white rounded-lg shadow-sm p-1 mt-4 sm:mt-0">
-            {[
-              { value: 'week', label: 'This Week', icon: '📅' },
-              { value: 'month', label: 'This Month', icon: '🗓️' }
-            ].map((range) => (
-              <button
-                key={range.value}
-                onClick={() => setTimeRange(range.value)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  timeRange === range.value
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                }`}
-              >
-                <span>{range.icon}</span>
-                <span>{range.label}</span>
-              </button>
-            ))}
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Study Analytics</h1>
+          <p className="text-gray-600">Track your study progress and habits this week</p>
         </div>
 
         {/* Stats Cards */}
@@ -154,7 +128,7 @@ const AnalyticsDashboard = () => {
           />
           <StatCard
             title="Daily Average"
-            value={`${Math.floor((data.overview.totalStudyTime / (timeRange === 'week' ? 7 : 30)) / 60)}h ${Math.floor((data.overview.totalStudyTime / (timeRange === 'week' ? 7 : 30)) % 60)}m`}
+            value={`${Math.floor((data.overview.totalStudyTime / 7) / 60)}h ${Math.floor((data.overview.totalStudyTime / 7) % 60)}m`}
             icon="📊"
             color="purple"
           />

@@ -11,7 +11,6 @@ const Dashboard = ({ onNavigate }) => {
     todayStudyTime: 0
   });
 
-  const [recentActivity, setRecentActivity] = useState([]);
   const [todayTasks, setTodayTasks] = useState([]);
   const [activeGoals, setActiveGoals] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -45,7 +44,6 @@ const Dashboard = ({ onNavigate }) => {
         todayStudyTime: 0
       };
 
-      let activities = [];
       let tasks = [];
       let goals = [];
 
@@ -54,56 +52,18 @@ const Dashboard = ({ onNavigate }) => {
         tasks = Array.isArray(taskData) ? taskData : taskData.tasks || [];
         dashboardStats.todayTasks = tasks.length;
         dashboardStats.completedTasks = tasks.filter(task => task.status === 'Completed').length;
-        
-        tasks.forEach(task => {
-          if (task.status === 'Completed' && task.completedAt) {
-            const completedTime = new Date(task.completedAt);
-            const hoursAgo = Math.floor((new Date() - completedTime) / (1000 * 60 * 60));
-            activities.push({
-              type: 'task',
-              title: `Completed: ${task.title}`,
-              time: hoursAgo < 1 ? 'Just now' : `${hoursAgo} hours ago`,
-              icon: '✅'
-            });
-          }
-        });
       }
 
       if (goalsResponse.status === 'fulfilled') {
         const goalData = goalsResponse.value.data;
         goals = Array.isArray(goalData) ? goalData : goalData.goals || [];
         dashboardStats.activeGoals = goals.filter(goal => goal.status === 'active').length;
-        
-        goals.forEach(goal => {
-          if (goal.progressLogs && goal.progressLogs.length > 0) {
-            const latestLog = goal.progressLogs[goal.progressLogs.length - 1];
-            const logTime = new Date(latestLog.createdAt);
-            const hoursAgo = Math.floor((new Date() - logTime) / (1000 * 60 * 60));
-            activities.push({
-              type: 'goal',
-              title: `Updated progress on ${goal.title}`,
-              time: hoursAgo < 1 ? 'Just now' : `${hoursAgo} hours ago`,
-              icon: '🎯'
-            });
-          }
-        });
       }
 
       if (notesResponse.status === 'fulfilled') {
         const noteData = notesResponse.value.data;
         const notes = Array.isArray(noteData) ? noteData : noteData.notes || [];
         dashboardStats.totalNotes = notes.length;
-        
-        notes.slice(0, 2).forEach(note => {
-          const createdTime = new Date(note.createdAt);
-          const hoursAgo = Math.floor((new Date() - createdTime) / (1000 * 60 * 60));
-          activities.push({
-            type: 'note',
-            title: `Created note: ${note.title}`,
-            time: hoursAgo < 1 ? 'Just now' : `${hoursAgo} hours ago`,
-            icon: '📝'
-          });
-        });
       }
 
       if (analyticsResponse.status === 'fulfilled') {
@@ -114,14 +74,7 @@ const Dashboard = ({ onNavigate }) => {
         }
       }
 
-      activities.sort((a, b) => {
-        const timeA = a.time.includes('Just now') ? 0 : parseInt(a.time);
-        const timeB = b.time.includes('Just now') ? 0 : parseInt(b.time);
-        return timeA - timeB;
-      });
-
       setStats(dashboardStats);
-      setRecentActivity(activities.slice(0, 4));
       setTodayTasks(tasks.slice(0, 4));
       setActiveGoals(goals.filter(goal => goal.status === 'active').slice(0, 4));
       
@@ -136,7 +89,6 @@ const Dashboard = ({ onNavigate }) => {
         studyStreak: 0,
         todayStudyTime: 0
       });
-      setRecentActivity([]);
       setTodayTasks([]);
       setActiveGoals([]);
     } finally {

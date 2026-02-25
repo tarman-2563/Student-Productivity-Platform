@@ -33,7 +33,6 @@ const resourceSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    // For uploaded files
     fileUrl: {
         type: String,
         trim: true
@@ -43,18 +42,16 @@ const resourceSchema = new mongoose.Schema({
         trim: true
     },
     fileSize: {
-        type: Number // in bytes
+        type: Number
     },
     mimeType: {
         type: String,
         trim: true
     },
-    // For links
     externalUrl: {
         type: String,
         trim: true
     },
-    // Cloud storage info
     cloudProvider: {
         type: String,
         enum: ["local", "cloudinary", "s3", "drive", "dropbox"],
@@ -64,7 +61,6 @@ const resourceSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    // Organization
     tags: [{
         type: String,
         trim: true,
@@ -74,7 +70,6 @@ const resourceSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    // Associations
     linkedNotes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Note"
@@ -91,14 +86,12 @@ const resourceSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Indexes for better query performance
 resourceSchema.index({ userId: 1, category: 1 });
 resourceSchema.index({ userId: 1, subject: 1 });
 resourceSchema.index({ userId: 1, type: 1 });
 resourceSchema.index({ userId: 1, isFavorite: -1, createdAt: -1 });
 resourceSchema.index({ title: 'text', description: 'text', tags: 'text' });
 
-// Virtual for formatted file size
 resourceSchema.virtual('formattedSize').get(function() {
     if (!this.fileSize) return 'N/A';
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -106,7 +99,6 @@ resourceSchema.virtual('formattedSize').get(function() {
     const i = Math.floor(Math.log(this.fileSize) / Math.log(1024));
     return Math.round(this.fileSize / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
 });
-
 
 
 const Resource = mongoose.model("Resource", resourceSchema);

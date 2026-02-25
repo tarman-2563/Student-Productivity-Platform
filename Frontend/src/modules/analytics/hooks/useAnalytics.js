@@ -20,17 +20,10 @@ const useAnalytics = (timeRange = 'week') => {
           goalsCompleted: 0,
           totalGoals: 0,
           goalsChange: 0,
-          productivityScore: 0,
-          productivityChange: 0,
           studyStreak: 0,
           streakChange: 0
         },
-        studyTrends: [],
-        goalProgress: [],
-        subjectStats: [],
-        productivityTrends: [],
-        achievements: [],
-        activityHeatmap: []
+        productivityTrends: []
       };
       
       setData({ ...defaultData, ...analyticsData });
@@ -46,17 +39,10 @@ const useAnalytics = (timeRange = 'week') => {
           goalsCompleted: 0,
           totalGoals: 0,
           goalsChange: 0,
-          productivityScore: 0,
-          productivityChange: 0,
           studyStreak: 0,
           streakChange: 0
         },
-        studyTrends: [],
-        goalProgress: [],
-        subjectStats: [],
-        productivityTrends: [],
-        achievements: [],
-        activityHeatmap: []
+        productivityTrends: []
       });
     } finally {
       setLoading(false);

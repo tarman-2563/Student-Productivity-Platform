@@ -66,7 +66,6 @@ const Register = ({ onRegister, onSwitchToLogin }) => {
 
     return (
         <div className="w-full max-w-md">
-            {/* Logo and Header */}
             <div className="text-center mb-8 animate-fadeInUp">
                 <h1 className="text-3xl font-bold text-gray-900 mb-3">
                     Join StudySphere
@@ -76,7 +75,6 @@ const Register = ({ onRegister, onSwitchToLogin }) => {
                 </p>
             </div>
 
-            {/* Register Card */}
             <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden animate-scaleIn">
                 <div className="p-8">
                     <form className="space-y-5" onSubmit={handleSubmit}>
@@ -93,7 +91,6 @@ const Register = ({ onRegister, onSwitchToLogin }) => {
                             </div>
                         )}
                         
-                        {/* Name Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-semibold text-gray-700">
                                 Full Name
@@ -117,7 +114,6 @@ const Register = ({ onRegister, onSwitchToLogin }) => {
                             </div>
                         </div>
                         
-                        {/* Email Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-semibold text-gray-700">
                                 Email Address
@@ -141,7 +137,6 @@ const Register = ({ onRegister, onSwitchToLogin }) => {
                             </div>
                         </div>
                         
-                        {/* Password Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-semibold text-gray-700">
                                 Password
@@ -202,7 +197,6 @@ const Register = ({ onRegister, onSwitchToLogin }) => {
                             <p className="text-xs text-gray-500">Must be at least 6 characters</p>
                         </div>
                         
-                        {/* Submit Button */}
                         <button 
                             type="submit" 
                             className={`w-full h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-2xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-0.5 ${isLoading ? 'opacity-75 cursor-not-allowed' : ''}`}
@@ -225,7 +219,6 @@ const Register = ({ onRegister, onSwitchToLogin }) => {
                     </form>
                 </div>
 
-                {/* Footer */}
                 <div className="px-8 py-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-blue-100">
                     <p className="text-center text-sm text-gray-600 mb-4">
                         Already have an account?{" "}

@@ -1,28 +1,21 @@
 const {DailyStats,StudySession}=require("../models/analyticsSchema");
-const StudyTask=require("../models/studyTaskSchema");
 const Goal=require("../models/goalSchema");
 const mongoose=require("mongoose");
 
 const getAnalyticsData=async(req,res)=>{
     try{
-        const {timeRange='week'}=req.query;
         const userId=req.user.id;
-        const dateRanges=getDateRange(timeRange);
-        const {startDate,endDate}=dateRanges;
+        const endDate=new Date();
+        const startDate=new Date();
+        startDate.setDate(endDate.getDate()-7);
         
-        const overview=await getOverviewStats(userId,startDate,endDate,timeRange);
-        const yearlyData=await getYearlyData(userId);
-        const goalProgress=await getGoalProgressData(userId);
-        const subjectStats=await getSubjectStats(userId,startDate,endDate);
+        const overview=await getOverviewStats(userId,startDate,endDate);
         const productivityTrends=await getProductivityTrends(userId,startDate,endDate);
         
         res.status(200).json({
             overview,
-            yearlyData,
-            goalProgress,
-            subjectStats,
             productivityTrends,
-            timeRange,
+            timeRange:'week',
             dateRange:{startDate,endDate}
         });
     }
@@ -32,29 +25,7 @@ const getAnalyticsData=async(req,res)=>{
     }
 };
 
-const getDateRange=(timeRange)=>{
-    const endDate=new Date();
-    const startDate=new Date();
-    switch(timeRange){
-        case 'week':
-            startDate.setDate(endDate.getDate()-7);
-            break;
-        case 'month':
-            startDate.setMonth(endDate.getMonth()-1);
-            break;
-        case 'quarter':
-            startDate.setMonth(endDate.getMonth()-3);
-            break;
-        case 'year':
-            startDate.setFullYear(endDate.getFullYear()-1);
-            break;
-        default:
-            startDate.setDate(endDate.getDate()-7);
-    }
-    return {startDate,endDate};
-};
-
-const getOverviewStats=async(userId,startDate,endDate,timeRange)=>{
+const getOverviewStats=async(userId,startDate,endDate)=>{
     const periodLength=endDate-startDate;
     const prevStartDate=new Date(startDate.getTime()-periodLength);
     const prevEndDate=new Date(startDate);
@@ -117,92 +88,87 @@ const getOverviewStats=async(userId,startDate,endDate,timeRange)=>{
     };
 };
 
-const getYearlyData=async(userId)=>{
-    const currentYear=new Date().getFullYear();
-    const startDate=new Date(currentYear,0,1);
-    const endDate=new Date(currentYear,11,31);
-    
-    const dailyStats=await DailyStats.find({
-        userId:new mongoose.Types.ObjectId(userId),
-        date:{$gte:startDate,$lte:endDate}
-    }).sort({date:1});
-    
-    const statsMap=new Map();
-    dailyStats.forEach(stat=>{
-        const dateStr=stat.date.toISOString().split('T')[0];
-        statsMap.set(dateStr,stat.totalStudyTime);
-    });
-    
-    const yearlyData=[];
-    const currentDate=new Date(startDate);
-    
-    while(currentDate<=endDate){
-        const dateStr=currentDate.toISOString().split('T')[0];
-        const studyTime=statsMap.get(dateStr) || 0;
-        
-        yearlyData.push({
-            date:dateStr,
-            studyTime:studyTime
-        });
-        
-        currentDate.setDate(currentDate.getDate()+1);
-    }
-    
-    return yearlyData;
-};
-
-const getGoalProgressData=async(userId)=>{
-    return await Goal.find({
-        userId:new mongoose.Types.ObjectId(userId),
-        status:{$in:['active','completed']}
-    })
-    .select('title progress status category priority targetDate')
-    .sort({updatedAt:-1})
-    .limit(10);
-};
-
-const getSubjectStats=async(userId,startDate,endDate)=>{
-    return await DailyStats.aggregate([
-        {
-            $match:{
-                userId:new mongoose.Types.ObjectId(userId),
-                date:{$gte:startDate,$lte:endDate}
-            }
-        },
-        {$unwind:"$subjectBreakdown"},
-        {
-            $group:{
-                _id:"$subjectBreakdown.subject",
-                time:{$sum:"$subjectBreakdown.timeSpent"}
-            }
-        },
-        {$sort:{time:-1}},
-        {$limit:10}
-    ]).then(results=>
-        results.map(r=>({name:r._id,time:r.time}))
-    );
-};
-
 const getProductivityTrends=async(userId,startDate,endDate)=>{
     const stats=await DailyStats.find({
         userId:new mongoose.Types.ObjectId(userId),
         date:{$gte:startDate,$lte:endDate}
     }).sort({date:1});
-    return stats.map(stat=>({
-        date:stat.date.toISOString(),
-        score:stat.productivityScore,
-        factors:[
-            {name:'Task Completion',impact:Math.random()*20-10},
-            {name:'Time Management',impact:Math.random()*20-10},
-            {name:'Focus Level',impact:Math.random()*20-10}
-        ],
-        breakdown:{
-            completion:Math.round(stat.productivityScore*0.8+Math.random()*20),
-            timeManagement:Math.round(stat.productivityScore*0.9+Math.random()*20),
-            goalProgress:Math.round(stat.productivityScore*0.7+Math.random()*20),
-            consistency:Math.round(stat.productivityScore*0.85+Math.random()*20)
-        }
-    }));
+
+    const trends=[];
+    
+    for(let i=0;i<stats.length;i++){
+        const stat=stats[i];
+        const prevStat=i>0?stats[i-1]:null;
+        
+        const completionRate=stat.tasksPlanned>0
+            ?(stat.tasksCompleted/stat.tasksPlanned)*100
+            :0;
+        
+        const dayStart=new Date(stat.date);
+        dayStart.setHours(0,0,0,0);
+        const dayEnd=new Date(stat.date);
+        dayEnd.setHours(23,59,59,999);
+        
+        const sessions=await StudySession.find({
+            userId:new mongoose.Types.ObjectId(userId),
+            startTime:{$gte:dayStart,$lte:dayEnd}
+        });
+        
+        const avgEfficiency=sessions.length>0
+            ?sessions.reduce((sum,s)=>sum+(s.efficiency||0),0)/sessions.length
+            :0;
+        
+        const consistencyScore=Math.min(100,stat.streakCount*10);
+        
+        const dayGoals=await Goal.find({
+            userId:new mongoose.Types.ObjectId(userId),
+            status:{$in:['active','completed']},
+            updatedAt:{$gte:dayStart,$lte:dayEnd}
+        });
+        
+        const goalProgressScore=dayGoals.length>0
+            ?dayGoals.reduce((sum,g)=>sum+(g.progress||0),0)/dayGoals.length
+            :0;
+        
+        const taskCompletionImpact=prevStat
+            ?completionRate-(prevStat.tasksPlanned>0?(prevStat.tasksCompleted/prevStat.tasksPlanned)*100:0)
+            :0;
+        
+        const timeManagementImpact=prevStat
+            ?avgEfficiency-50
+            :0;
+        
+        const consistencyImpact=prevStat
+            ?(stat.streakCount-prevStat.streakCount)*10
+            :0;
+        
+        trends.push({
+            date:stat.date.toISOString(),
+            score:stat.productivityScore,
+            factors:[
+                {
+                    name:'Task Completion',
+                    impact:Math.round(taskCompletionImpact)
+                },
+                {
+                    name:'Time Management',
+                    impact:Math.round(timeManagementImpact)
+                },
+                {
+                    name:'Consistency',
+                    impact:Math.round(consistencyImpact)
+                }
+            ],
+            breakdown:{
+                completion:Math.round(completionRate),
+                timeManagement:Math.round(avgEfficiency),
+                goalProgress:Math.round(goalProgressScore),
+                consistency:Math.round(consistencyScore)
+            }
+        });
+    }
+    
+    return trends;
 };
 
 const calculatePercentageChange=(current,previous)=>{

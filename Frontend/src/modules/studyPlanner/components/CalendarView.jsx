@@ -3,7 +3,7 @@ import { getDailyTasks } from '../services/studyTask.api';
 
 const CalendarView = ({ onDateSelect, onTaskClick }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [view, setView] = useState('month'); // 'month' or 'week'
+    const [view, setView] = useState('month'); 
     const [tasksMap, setTasksMap] = useState({});
     const [loading, setLoading] = useState(false);
 
@@ -94,7 +94,6 @@ const CalendarView = ({ onDateSelect, onTaskClick }) => {
 
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            {/* Header */}
             <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-4">
@@ -113,7 +112,6 @@ const CalendarView = ({ onDateSelect, onTaskClick }) => {
                     </div>
 
                     <div className="flex items-center space-x-3">
-                        {/* View Toggle */}
                         <div className="flex bg-gray-100 rounded-lg p-1">
                             <button
                                 onClick={() => setView('month')}
@@ -137,7 +135,6 @@ const CalendarView = ({ onDateSelect, onTaskClick }) => {
                             </button>
                         </div>
 
-                        {/* Navigation */}
                         <div className="flex items-center space-x-2">
                             <button
                                 onClick={view === 'month' ? goToPreviousMonth : goToPreviousWeek}
@@ -159,7 +156,6 @@ const CalendarView = ({ onDateSelect, onTaskClick }) => {
                     </div>
                 </div>
 
-                {/* Legend */}
                 <div className="flex items-center space-x-6 text-sm">
                     <div className="flex items-center space-x-2">
                         <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
@@ -176,7 +172,6 @@ const CalendarView = ({ onDateSelect, onTaskClick }) => {
                 </div>
             </div>
 
-            {/* Calendar Grid */}
             <div className="p-6">
                 {loading ? (
                     <div className="flex items-center justify-center py-20">
@@ -214,7 +209,6 @@ const MonthView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
 
         const days = [];
         
-        // Previous month days
         const prevMonthLastDay = new Date(year, month, 0).getDate();
         for (let i = startingDayOfWeek - 1; i >= 0; i--) {
             days.push({
@@ -223,7 +217,6 @@ const MonthView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
             });
         }
 
-        // Current month days
         for (let i = 1; i <= daysInMonth; i++) {
             days.push({
                 date: new Date(year, month, i),
@@ -231,8 +224,7 @@ const MonthView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
             });
         }
 
-        // Next month days
-        const remainingDays = 42 - days.length; // 6 rows * 7 days
+        const remainingDays = 42 - days.length; 
         for (let i = 1; i <= remainingDays; i++) {
             days.push({
                 date: new Date(year, month + 1, i),
@@ -249,7 +241,6 @@ const MonthView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
 
     return (
         <div>
-            {/* Week day headers */}
             <div className="grid grid-cols-7 gap-2 mb-2">
                 {weekDays.map(day => (
                     <div key={day} className="text-center text-sm font-semibold text-gray-600 py-2">
@@ -258,10 +249,8 @@ const MonthView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
                 ))}
             </div>
 
-            {/* Calendar grid */}
             <div className="grid grid-cols-7 gap-2">
                 {days.map((day, index) => {
-                    // Use local date format for consistency
                     const year = day.date.getFullYear();
                     const month = String(day.date.getMonth() + 1).padStart(2, '0');
                     const dayNum = String(day.date.getDate()).padStart(2, '0');
@@ -309,7 +298,6 @@ const WeekView = ({ currentDate, tasksMap, onDateClick, onTaskClick }) => {
     return (
         <div className="grid grid-cols-7 gap-4">
             {weekDays.map((date, index) => {
-                // Use local date format for consistency
                 const year = date.getFullYear();
                 const month = String(date.getMonth() + 1).padStart(2, '0');
                 const day = String(date.getDate()).padStart(2, '0');

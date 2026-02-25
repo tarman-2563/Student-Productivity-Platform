@@ -41,7 +41,6 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
 
     return (
         <div className="w-full max-w-md">
-            {/* Logo and Header */}
             <div className="text-center mb-8 animate-fadeInUp">
                 <h1 className="text-4xl font-bold text-gray-900 mb-3">
                     Welcome Back
@@ -51,7 +50,6 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
                 </p>
             </div>
 
-            {/* Login Card */}
             <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden animate-scaleIn">
                 <div className="p-8">
                     <form className="space-y-6" onSubmit={handleSubmit}>
@@ -68,7 +66,6 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
                             </div>
                         )}
                         
-                        {/* Email Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-semibold text-gray-700">
                                 Email Address
@@ -92,7 +89,6 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
                             </div>
                         </div>
                         
-                        {/* Password Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-semibold text-gray-700">
                                 Password
@@ -132,7 +128,6 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
                             </div>
                         </div>
                         
-                        {/* Submit Button */}
                         <button 
                             type="submit" 
                             className={`w-full h-14 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-2xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-0.5 ${isLoading ? 'opacity-75 cursor-not-allowed' : ''}`}
@@ -155,7 +150,6 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
                     </form>
                 </div>
 
-                {/* Footer */}
                 <div className="px-8 py-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-blue-100">
                     <p className="text-center text-sm text-gray-600">
                         Don't have an account?{" "}

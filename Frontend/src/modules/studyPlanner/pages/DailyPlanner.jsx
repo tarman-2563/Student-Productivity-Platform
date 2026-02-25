@@ -7,7 +7,7 @@ import TaskDetailModal from "../components/TaskDetailModal";
 
 const DailyPlanner = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [viewMode, setViewMode] = useState('list'); // 'list' or 'calendar'
+    const [viewMode, setViewMode] = useState('list'); 
     const [selectedTask, setSelectedTask] = useState(null);
     const { tasks, stats, loading, error, refetch } = useDailyTasks(selectedDate);
 
@@ -81,7 +81,7 @@ const DailyPlanner = () => {
 
     const handleCalendarDateSelect = (date) => {
         setSelectedDate(date);
-        setViewMode('list'); // Switch to list view when date is selected
+        setViewMode('list'); 
     };
 
     const handleTaskClick = (task) => {
@@ -94,7 +94,6 @@ const DailyPlanner = () => {
 
     return (
         <div className="max-w-7xl mx-auto p-6">
-            {/* View Mode Toggle */}
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Study Planner</h1>
@@ -237,7 +236,6 @@ const DailyPlanner = () => {
         </div>
             )}
 
-            {/* Task Detail Modal */}
             {selectedTask && (
                 <TaskDetailModal
                     task={selectedTask}
@@ -312,7 +310,6 @@ const CreateTaskForm = ({ onCreateTask }) => {
                 </div>
 
                 <div className="space-y-4">
-                    {/* Task Title */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             What will you study? *
@@ -326,7 +323,6 @@ const CreateTaskForm = ({ onCreateTask }) => {
                         />
                     </div>
 
-                    {/* Subject and Duration Row */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -357,7 +353,6 @@ const CreateTaskForm = ({ onCreateTask }) => {
                         </div>
                     </div>
 
-                    {/* Priority */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Priority Level
@@ -396,7 +391,6 @@ const CreateTaskForm = ({ onCreateTask }) => {
                     </div>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-100">
                     <button 
                         type="button" 
